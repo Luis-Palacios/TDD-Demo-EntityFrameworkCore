@@ -1,0 +1,53 @@
+﻿@model TddDemo.Web.Data.Budget
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Budget</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+    <hr />
+    <form asp-action="Create" asp-controller="Forecast">
+        <input type="hidden" name="BudgetId" value="@Model.Id"/>
+        <input type="date" class="form-control col-md-4" name="ForecastDate" value="" /> 
+        <br />
+        <button type="submit" class="btn btn-primary">Add Forecast</button>
+    </form>
+    <br />
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Description</td>
+                <td>Budget $</td>
+                <td>ToDate $</td>
+                <td>Remaining $</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var budgetDetail in Model.BudgetDetails)
+            {
+                <tr>
+                    <td>@budgetDetail.Description</td>
+                    <td>@budgetDetail.BudgetCost</td>
+                    <td>@budgetDetail.ToDateCost</td>
+                    <td>@(budgetDetail.BudgetCost - budgetDetail.ToDateCost)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
