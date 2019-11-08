@@ -2,7 +2,7 @@
 
 namespace TddDemo.Web.Data
 {
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext : DbContext
     {
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<BudgetDetail> BudgetDetails { get; set; }
@@ -25,7 +25,13 @@ namespace TddDemo.Web.Data
                 .Property(b => b.Name)
                 .HasMaxLength(300);
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<BudgetDetail>()
+                .HasMany(b => b.ForecastDetails)
+                .WithOne(f => f.BudgetDetail)
+                .HasForeignKey(f => f.BudgetDetailId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+                base.OnModelCreating(modelBuilder);
         }
     }
 }
