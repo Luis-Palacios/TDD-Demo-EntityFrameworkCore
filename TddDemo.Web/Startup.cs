@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TddDemo.Web.Data;
+using TddDemo.Web.Services;
 
 namespace TddDemo.Web
 {
@@ -29,6 +30,8 @@ namespace TddDemo.Web
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("MainDb")));
+
+            services.AddTransient<IForecastService, ForecastService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

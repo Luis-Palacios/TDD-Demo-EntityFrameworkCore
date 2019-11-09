@@ -6,6 +6,7 @@ using TddDemo.Web.Models;
 using Xunit;
 using FluentAssertions;
 using System.Linq;
+using TddDemo.Web.Services;
 
 namespace TddDemo.Test
 {
@@ -79,7 +80,8 @@ namespace TddDemo.Test
             Forecast forecast = null;
             using (var context = new ApplicationDbContext(options))
             {
-                forecast = TheCode(context, inputModel);
+                var forecastService = new ForecastService(context);
+                forecast =  forecastService.CreateForecastFromBudget(inputModel);
             }
 
             // Assert
@@ -107,30 +109,6 @@ namespace TddDemo.Test
                 }
             }
 
-        }
-
-        private Forecast TheCode(ApplicationDbContext db, NewForecastInputModel inputModel)
-        {
-            var budget = db.Budgets.Include(b => b.BudgetDetails).FirstOrDefault(b => b.Id == inputModel.BudgetId);
-
-            var newForecast = new Forecast
-            {
-                BudgetId = budget.Id,
-                Date = inputModel.ForecastDate
-            };
-            foreach (var budgetDetail in budget.BudgetDetails)
-            {
-                newForecast.ForecastDetails.Add(new ForecastDetail
-                {
-                    BudgetCost = budgetDetail.BudgetCost,
-                    BudgetDetailId = budgetDetail.Id,
-                    ForecastCost = budgetDetail.BudgetCost,
-                    ToDateCost = budgetDetail.ToDateCost,
-                });
-            }
-            db.Forecasts.Add(newForecast);
-            db.SaveChanges();
-            return newForecast;
         }
     }
 }
